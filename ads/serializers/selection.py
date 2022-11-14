@@ -33,7 +33,7 @@ class SelectionCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def is_valid(self, raise_exception=True):
-        self._ads = self.initial_data.pop('items', [])
+        self._ads = self.initial_data.pop('ads', [])
         return super().is_valid(raise_exception=raise_exception)
 
     def create(self, validated_data):

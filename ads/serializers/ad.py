@@ -1,7 +1,7 @@
 from rest_framework import serializers
-
 from ads.models.ad import Ad
 from users.models import User
+from users.validators import check_is_published_status
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -38,6 +38,8 @@ class AdDetailSerializer(serializers.ModelSerializer):
 
 class AdCreateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
+
+    is_published = serializers.BooleanField(validators=[check_is_published_status])
 
     class Meta:
         model = Ad

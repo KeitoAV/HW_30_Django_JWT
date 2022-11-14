@@ -1,4 +1,3 @@
-
 from rest_framework import serializers
 
 from users.models import User, Location
@@ -50,12 +49,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(**validated_data)
 
-        user.set_password(user.password)  # hash password
-        user.save()
-
         for location in self._locations:
             location_obj, _ = Location.objects.get_or_create(name=location)
-            user.location.add(location_obj)
+            user.locations.add(location_obj)
+
+        user.set_password(validated_data["password"])
 
         user.save()
         return user

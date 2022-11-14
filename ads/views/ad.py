@@ -73,4 +73,3 @@ class AdImageView(UpdateAPIView):
         ad.save()
         response = AdUpdateSerializer(ad).data
         return JsonResponse(response)
-

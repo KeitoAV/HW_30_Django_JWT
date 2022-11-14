@@ -1,5 +1,8 @@
+from django.core.validators import EmailValidator, RegexValidator
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
+from users.validators import check_min_age
 
 
 class Location(models.Model):
@@ -26,8 +29,17 @@ class User(AbstractUser):
     username = models.CharField(verbose_name="Логин", max_length=20, unique=True)
     password = models.CharField(verbose_name="Пароль", max_length=200)
     role = models.CharField(max_length=10, choices=ROLES, default='member')
-    age = models.SmallIntegerField(null=True)
+    age = models.PositiveSmallIntegerField(null=True, blank=True)
     location = models.ManyToManyField(Location)
+
+    birth_date = models.DateField(blank=True, null=True, validators=[check_min_age])
+    email = models.CharField(
+        max_length=254,
+        null=True,
+        unique=True,
+        validators=[EmailValidator(),
+                    RegexValidator(regex=r"(?:rambler\.ru)", inverse_match=True, message='Домен Рамблера запрещен.')]
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -35,6 +47,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
-
-
